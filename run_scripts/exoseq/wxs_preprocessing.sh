@@ -7,7 +7,7 @@
 account='acc_JanssenIBD' # do not leave this to default unless running interactive profile
 job_queue='premium' #default queue is alloc
 
-# Run directory. Pipeline outputs to $rundir/Processed
+# Run directory. Pipeline outputs to $rundir/preprocessing
 rundir='/sc/orga/projects/losicb01a/common_folder/nextflow-pipelines/wxs-test'
 
 # Reference genome to use [Default: GRCh38; other refs not yet supported]
@@ -21,15 +21,10 @@ cd $rundir
 inputfq="/sc/orga/projects/losicb01a/common_folder/nextflow-pipelines/test-datasets/testdata/Sample*.Test*{R1,R2}_L*.fastq.gz"
 
 module load nextflow/0.30.2
-#NXF_OPTS='-Xms1g'
-
-#while read line ; do
-
-#    sampleID=${line##/sc*/}
-#    echo $sampleID
 
 nextflow run $pipeline/preprocessing.nf \
 --outdir $rundir/preprocessing \
+-w $rundir/preprocessing_temp \
 --reads "$inputfq" \
 --genome $ref \
 --saveAlignedIntermediates true \
@@ -37,6 +32,3 @@ nextflow run $pipeline/preprocessing.nf \
 --job_queue $job_queue \
 -resume \
 -profile standard
-
-
-#done<list

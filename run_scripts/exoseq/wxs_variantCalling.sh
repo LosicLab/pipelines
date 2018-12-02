@@ -7,7 +7,7 @@
 account='acc_JanssenIBD' # do not leave this to default unless running interactive profile
 job_queue='premium' #default queue is alloc
 
-# Run directory. Pipeline outputs to $rundir/Processed
+# Run directory. Pipeline outputs to $rundir/VariantCalling
 rundir='/sc/orga/projects/losicb01a/common_folder/nextflow-pipelines/wxs-test'
 
 # Reference genome to use [Default: GRCh38; other refs not yet supported]
@@ -18,25 +18,23 @@ pipeline='/sc/orga/projects/losicb01a/common_folder/nextflow-pipelines/exoseq'
 mkdir -p $rundir
 cd $rundir
 
-inputfq="/sc/orga/projects/losicb01a/common_folder/nextflow-pipelines/test-datasets/testdata/*{R1,R2}*.fastq.gz"
+
+nID='' # identifier for normal sample
+tID='' # identifier for tumor sample
+       # (leave blank & comment out lines using this variable if no somatic mutation calling)
+
+nbam=$rundir"/"$nID"*.bam"
+tbam=$rundir"/"$tID"*.bam"
 
 module load nextflow/0.30.2
-#NXF_OPTS='-Xms1g'
 
-#while read line ; do
-
-#    sampleID=${line##/sc*/}
-#    echo $sampleID
-
-nextflow run $pipeline/preprocessing.nf \
---outdir $rundir/preprocessing \
---reads "$inputfq" \
+nextflow run $pipeline/variantCalling.nf \
+--outdir $rundir/variantCalling \
+-w $rundir/variantCalling_temp \
+--nbam "$nbam" \
+--tbam "$tbam" \
 --genome $ref \
---saveAlignedIntermediates true \
 --minerva_account $account \
 --job_queue $job_queue \
 -resume \
 -profile standard
-
-
-#done<list
