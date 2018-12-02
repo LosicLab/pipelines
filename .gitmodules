@@ -1,0 +1,3 @@
+[submodule "exoseq"]
+	path = exoseq
+	url = https://github.com/LosicLab/exoseq.git
